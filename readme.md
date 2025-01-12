@@ -26,3 +26,40 @@ Docker is widely used for developing, shipping, and running applications in a co
 - **Usage**: Containers are used to run applications consistently across different environments. They can be scaled up or down easily by adding or removing containers.
 
 In summary, a Docker image is a blueprint for creating containers, while a Docker container is a running instance of that image.
+
+---
+## Docker Vs Docker Compose
+### [Docker](/react-docker/README.md)
+- **Purpose**: A platform to create, manage, and run containers.
+- **Primary Use**: Runs a single container per command (e.g., `docker run`, `docker build`).
+- **Scope**: Focused on individual containers.
+- **Configuration**: Requires manual configuration for each container (e.g., networking, volumes).
+- **Commands**: Operates with direct `docker` commands (e.g., `docker build`, `docker run`, `docker stop`).
+- **Example Use Case**: Running a single instance of a React app.
+
+---
+
+### [Docker Compose](/react-docker-compose/README.md)
+- **Purpose**: A tool to define and manage multi-container Docker applications.
+- **Primary Use**: Runs multiple containers defined in a YAML file (`docker-compose.yml`).
+- **Scope**: Manages multiple services (e.g., web, database, cache) as a single application.
+- **Configuration**: Centralized configuration using a `docker-compose.yml` file.
+- **Commands**: Simplifies multi-container management (e.g., `docker compose up`, `docker compose down`).
+- **Example Use Case**: Running a React app with a backend API and database simultaneously.
+
+---
+
+### **Key Differences**
+| Feature                | Docker                      | Docker Compose               |
+|------------------------|-----------------------------|-----------------------------|
+| **Focus**             | Single container            | Multi-container applications |
+| **Configuration**     | Command-line or Dockerfile  | `docker-compose.yml`         |
+| **Ease of Use**       | Requires multiple commands  | Single command to manage all |
+| **Networking**        | Must link containers manually | Auto-configured networks     |
+| **Usage**             | Standalone container tasks  | Applications with dependencies (e.g., frontend + backend + DB) |
+
+---
+
+### **Summary**
+- Use **Docker** for managing individual containers.
+- Use **Docker Compose** for orchestrating multi-container environments with ease.
