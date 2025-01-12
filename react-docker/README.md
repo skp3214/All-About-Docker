@@ -1,50 +1,119 @@
-# React + TypeScript + Vite
+# React + Vite Dockerized Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates how to set up and run a React application powered by Vite in a Docker container. It includes live reloading for real-time changes during development.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
+Ensure you have the following installed:
+- [Docker](https://www.docker.com/)
+- [Node.js](https://nodejs.org/) (optional for local testing)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Build and Run the Project in Docker
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### 1. Build the Docker Image
+To create a Docker image from the provided `Dockerfile`, run:
+```bash
+docker build -t react-docker .
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### 2. Run the Docker Container
+To start the container and map the application to port `5173`, use:
+```bash
+docker run -p 5173:5173 -v "$(pwd):/app" -v /app/node_modules react-docker
 ```
+
+#### Explanation:
+- `-p 5173:5173`: Maps port 5173 from the container to your local machine.
+- `-v "$(pwd):/app"`: Mounts your local project directory to the `/app` directory in the container.
+- `-v /app/node_modules`: Ensures node modules inside the container are used, avoiding conflicts with local modules.
+
+### 3. Access the Application
+Open your browser and navigate to:
+```
+http://localhost:5173
+```
+
+---
+
+## 🔄 Real-Time Code Updates in the Container
+
+Vite's Hot Module Replacement (HMR) is configured to detect changes and reload the application automatically. To enable this:
+
+1. **Update the `vite.config.js`** in the project root with (I have already updated):
+   ```javascript
+   export default {
+     server: {
+       host: true,
+       watch: {
+         usePolling: true, // Ensures changes are detected in Docker
+       },
+     },
+   };
+   ```
+
+2. Restart the container after saving the changes:
+   ```bash
+   docker run -p 5173:5173 -v "$(pwd):/app" -v /app/node_modules react-docker
+   ```
+
+3. Modify any file, such as `src/App.jsx`, and see the changes reflected in real-time in the browser.
+
+---
+
+## 🛑 Stop the Container
+To stop the running container:
+1. List the running containers:
+   ```bash
+   docker ps
+   ```
+
+2. Stop the container using its `CONTAINER_ID`:
+   ```bash
+   docker stop <CONTAINER_ID>
+   ```
+
+---
+
+## 🐳 Additional Docker Commands
+
+- **Rebuild the Image**:
+   ```bash
+   docker build -t react-docker .
+   ```
+
+- **Remove Unused Containers**:
+   ```bash
+   docker rm $(docker ps -a -q)
+   ```
+
+- **Remove Unused Images**:
+   ```bash
+   docker rmi $(docker images -q)
+   ```
+
+---
+
+## 📂 Project Structure
+
+```
+├── src/
+│   ├── App.jsx         # Main React component
+│   └── index.jsx       # Entry point for React
+├── public/             # Static assets
+├── Dockerfile          # Docker configuration
+├── package.json        # Dependencies and scripts
+├── vite.config.js      # Vite configuration
+└── README.md           # Project documentation
+```
+
+---
+
+## 📖 Resources
+- [Docker Documentation](https://docs.docker.com/)
+- [Vite Documentation](https://vitejs.dev/)
+- [React Documentation](https://reactjs.org/)
