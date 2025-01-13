@@ -63,3 +63,106 @@ In summary, a Docker image is a blueprint for creating containers, while a Docke
 ### **Summary**
 - Use **Docker** for managing individual containers.
 - Use **Docker Compose** for orchestrating multi-container environments with ease.
+
+---
+
+## **Volumes**
+Volumes are a Docker feature used to manage and persist data beyond the lifecycle of containers.
+
+### **Purpose**
+- Store and share data between containers.
+- Persist data even if a container is deleted.
+
+### **Types of Volumes**
+1. **Anonymous Volumes**: Automatically created and managed by Docker.
+   - Example: `docker run -v /app/data my-app`
+   - The volume is unnamed and only accessible by this container.
+
+2. **Named Volumes**: Explicitly created with a specific name.
+   - Example: `docker volume create my-volume`
+   - Accessible by multiple containers.
+   - Managed through Docker CLI.
+
+3. **Bind Mounts**: Maps a host machine directory to a container directory.
+   - Example: `docker run -v $(pwd):/app my-app`
+   - Useful for development (real-time file changes).
+
+### **How to Use Volumes**
+1. **CLI Commands**:
+   - Create a volume: `docker volume create my-volume`
+   - List volumes: `docker volume ls`
+   - Remove a volume: `docker volume rm my-volume`
+
+2. **In `docker-compose.yml`**:
+```yaml
+volumes:
+  my-volume:
+    driver: local
+
+services:
+  app:
+    image: my-app
+    volumes:
+      - my-volume:/app/data
+```
+
+### **Benefits**
+- Decouples data from containers.
+- Easier backups and restoration.
+- Increased performance for data-heavy applications.
+
+---
+
+## **Networks**
+Networks allow Docker containers to communicate with each other and optionally with the host system.
+
+### **Purpose**
+- Isolate and control container communication.
+- Connect containers across multiple hosts (using external tools like Docker Swarm).
+
+### **Types of Networks**
+1. **Bridge Network** (Default):
+   - Allows containers to communicate on the same host.
+   - Used when running standalone containers (e.g., `docker run`).
+
+2. **Host Network**:
+   - Bypasses Docker's network isolation and uses the host machine's network stack.
+   - Faster but less secure.
+   - Example: `docker run --network host my-app`
+
+3. **Overlay Network**:
+   - Enables communication between containers across multiple hosts.
+   - Requires Docker Swarm or other orchestrators.
+
+4. **None Network**:
+   - Disables networking for the container.
+   - Example: `docker run --network none my-app`
+
+### **How to Use Networks**
+1. **CLI Commands**:
+   - Create a network: `docker network create my-network`
+   - List networks: `docker network ls`
+   - Inspect a network: `docker network inspect my-network`
+   - Remove a network: `docker network rm my-network`
+
+2. **In `docker-compose.yml`**:
+```yaml
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  app:
+    image: my-app
+    networks:
+      - my-network
+  db:
+    image: my-db
+    networks:
+      - my-network
+```
+
+### **Benefits**
+- Isolates traffic for better security.
+- Simplifies container-to-container communication.
+- Offers flexibility for scaling and managing services.
